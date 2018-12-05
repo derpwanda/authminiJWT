@@ -14,7 +14,7 @@ add token generator function - generateToken()
 add generator function to ...
   -return token object (if you need to. way to see if it was created)
 
-#create a protected enpoint (aka middleware)
+#create a protected endpoint (aka middleware)
 created a protected function
   create a const to references the token
   if the token is valid move ahead

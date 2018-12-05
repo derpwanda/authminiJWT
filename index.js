@@ -15,7 +15,7 @@ function generateToken(user) {
   const payload = {
     subject: user.id,
     username: user.username,
-    roles: ['sales', 'marketing'], //added manually here; normally would come from db
+    department: user.department, //added manually here; normally would come from db
   }
 
   //const secret = 'afoiu2389u_caiocja;l3?vu80vnqa909jk&claksma';
@@ -88,7 +88,7 @@ server.post('/api/register', (req,res) => {
   .then(ids => {
     res.status(201).json(ids);
   })
-  .catch(err => res.json(err))
+  .catch(err => res.json({message:"attempt registration again", err}))
 })
 
 server.get('/', (req, res) => {
@@ -110,9 +110,9 @@ server.get('/api/me', protected, (req, res) => {
 });
 
 
-function checkRole(role) {
+function checkRole(department) {
   return function(req, res, next) {
-    if (req.decodedToken && req.decodedToken.roles.includes(role)) {
+    if (req.decodedToken && req.decodedToken.roles.includes(department)) {
       next();
     } else {
       res.status(403).json({message:'not accessible resource (checkRole)'})
@@ -120,14 +120,14 @@ function checkRole(role) {
   }
 }
 
-server.get('/api/users', protected, checkRole('sale'), (req, res) => {
+server.get('/api/users', protected, checkRole('sales'), (req, res) => {
   //if they are logged in, provide access to users
   db('users')
     .select('id', 'username', 'password') // added password to the select****
     .then(users => {
       res.json(users);
     })
-    .catch(err => res.send(err));
+    .catch(err => res.send({message:"you are not able to view this", err}));
 });
 
 /* server.get('/api/users', protected, (req, res) => {
