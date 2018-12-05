@@ -101,7 +101,7 @@ server.get('/api/me', protected, (req, res) => {
     //if they are logged in, provide access to users
     db('users')
       .select('id', 'username', 'password') // added password to the select****
-      .where({ id: users.id })
+      .where({ id: req.session.user })
       .first()
       .then(users => {
         res.json(users);
@@ -109,7 +109,28 @@ server.get('/api/me', protected, (req, res) => {
       .catch(err => res.send(err));
 });
 
-server.get('/api/users', protected, (req, res) => {
+
+function checkRole(role) {
+  return function(req, res, next) {
+    if (req.decodedToken && req.decodedToken.roles.includes(role)) {
+      next();
+    } else {
+      res.status(403).json({message:'not accessible resource (checkRole)'})
+    }
+  }
+}
+
+server.get('/api/users', protected, checkRole('sale'), (req, res) => {
+  //if they are logged in, provide access to users
+  db('users')
+    .select('id', 'username', 'password') // added password to the select****
+    .then(users => {
+      res.json(users);
+    })
+    .catch(err => res.send(err));
+});
+
+/* server.get('/api/users', protected, (req, res) => {
     //if they are logged in, provide access to users
     db('users')
       .select('id', 'username', 'password') // added password to the select****
@@ -117,6 +138,6 @@ server.get('/api/users', protected, (req, res) => {
         res.json(users);
       })
       .catch(err => res.send(err));
-});
+}); */
 
 server.listen(3300, () => console.log('\nrunning on port 3300\n'));
