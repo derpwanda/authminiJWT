@@ -68,7 +68,7 @@ server.get('/api/me', protected, (req, res) => {
     //if they are logged in, provide access to users
     db('users')
       .select('id', 'username', 'password') // added password to the select****
-      .where({ id: req.session.user })
+      .where({ id: users.id })
       .first()
       .then(users => {
         res.json(users);
