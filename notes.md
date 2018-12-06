@@ -37,3 +37,6 @@ now you can reference secret by `process.end.VARIABLE_NAME` when need (ie, prote
 
 #checkRole
 1:48:15
+
+#ADD REACT APP
+npx create-react-app <folder>

@@ -15,7 +15,7 @@ function generateToken(user) {
   const payload = {
     subject: user.id,
     username: user.username,
-    department: user.department, //added manually here; normally would come from db
+    roles: ['sales', 'marketing'], //added manually here; normally would come from db
   }
 
   //const secret = 'afoiu2389u_caiocja;l3?vu80vnqa909jk&claksma';
@@ -110,9 +110,9 @@ server.get('/api/me', protected, (req, res) => {
 });
 
 
-function checkRole(department) {
+function checkRole(role) {
   return function(req, res, next) {
-    if (req.decodedToken && req.decodedToken.roles.includes(department)) {
+    if (req.decodedToken && req.decodedToken.roles.includes(role)) {
       next();
     } else {
       res.status(403).json({message:'not accessible resource (checkRole)'})
@@ -120,7 +120,7 @@ function checkRole(department) {
   }
 }
 
-server.get('/api/users', protected, checkRole('sales'), (req, res) => {
+server.get('/api/users', protected, checkRole('sale'), (req, res) => {
   //if they are logged in, provide access to users
   db('users')
     .select('id', 'username', 'password') // added password to the select****
