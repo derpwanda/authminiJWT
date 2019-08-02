@@ -32,7 +32,7 @@ in index.js add:
 now you can reference secret by `process.end.VARIABLE_NAME` when need (ie, protected rounts)
 
 #put token inside of cookie
--add req.session.jwt (jwt is based on name of jasonwebtoken used see line 5) and set it to the generated token variable inside route/midware
+-add req.session.jwt (jwt is based on name of jsonwebtoken used see line 5) and set it to the generated token variable inside route/midware
 -because you have set the token to req.session, in protected (if you are using it) you now need to change the token from req.headers.authorization to req.session.jwt
 
 #checkRole
